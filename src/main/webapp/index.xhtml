@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/default.xhtml">
+    <ui:define name="content">
+
+        <p:socket onMessage="handleDate" channel="/date"/>
+        <script type="text/javascript">
+            function handleDate(data) {
+                $('.display').html(data);
+            }
+        </script>
+
+        <p:socket onMessage="handleReload" channel="/reload"/>
+        <script type="text/javascript">
+            function handleReload() {
+                location.reload();
+            }
+        </script>
+
+        <h2>Aknakereső</h2>
+        <h:form>
+            <h:commandButton value="Újra" action="#{mineFieldModel.restart}"/>
+            <p:dataTable id="mineField" var="row" value="#{mineFieldModel.rows}" widgetVar="carsTable">
+                <p:columns value="#{mineFieldModel.columns}" var="column" columnIndexVar="colIndex">
+
+                    <!--TODO http://www.primefaces.org/showcase/ui/ajax/basic.xhtml-->
+                    <h:commandButton value="#{row.cell(column)}" action="#{mineFieldModel.click(column,row.index)}"/>
+                </p:columns>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
